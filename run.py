@@ -10,15 +10,32 @@ import coss
 import stellar
 import time
 import datetime
+import requests
 
 REFRESH_DELAY = 10
 TG_BOT_ENABLE = False
 TG_BOT_KEY = ''
 TG_CHAT_ID = 0
+MIN_DIFF = 3
 
-HITFee = hitbtc.GetFee()
-COSSFee = coss.GetFee()
-STRFee = stellar.GetFee()
+URL = 'https://api.telegram.org/bot%s/sendMessage' % TG_BOT_KEY
+PARAM = {}
+PARAM['chat_id'] = TG_CHAT_ID
+
+HITFee = 1 - hitbtc.GetFee()
+COSSFee = 1 - coss.GetFee()
+STRFee = 1 - stellar.GetFee()
+
+def TGSend(message):
+    if TG_BOT_ENABLE == False:
+        return
+    try:
+        PARAM['text'] = message
+        res = requests.post(URL, data = PARAM)
+        return
+    except IOError as e:
+        print(e)
+        return
 
 while True:
     try:
@@ -27,7 +44,7 @@ while True:
         STR = stellar.GetPrice()
         TIME = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if HIT['bid'] > COSS['ask']:
-            rate = (HIT['bid']/COSS['ask']-1)*100
+            rate = (HIT['bid']*HITFee*COSSFee/COSS['ask']-1)*100
             print(TIME + '    COSSIO Buy | HitBTC Sell ' + str(rate) + '%')
         if HIT['bid'] > STR['ask']:
             rate = (HIT['bid']/STR['ask']-1)*100

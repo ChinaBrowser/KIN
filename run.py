@@ -27,6 +27,7 @@ PARAM['chat_id'] = TG_CHAT_ID
 is_true = False
 
 def TGSend(message):
+    global is_true
     if TG_BOT_ENABLE == False:
         return
     if (LAST_MSG + MIN_DELAY) >= int(time.time()):
@@ -79,6 +80,7 @@ while True:
             print(TIME + '    ' + msg)
             TGSend(msg)
         if is_true:
+            TGSend('--------------------')
             LAST_MSG = int(time.time())
             is_true = False
 

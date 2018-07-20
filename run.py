@@ -11,7 +11,10 @@ import stellar
 import time
 import datetime
 
-REFRESH_DELAY = 5
+REFRESH_DELAY = 10
+TG_BOT_ENABLE = False
+TG_BOT_KEY = ''
+TG_CHAT_ID = 0
 
 HITFee = hitbtc.GetFee()
 COSSFee = coss.GetFee()
@@ -24,10 +27,10 @@ while True:
         STR = stellar.GetPrice()
         TIME = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         if HIT['bid'] > COSS['ask']:
-            rate = (HIT['bid']/COSS['asks']-1)*100
+            rate = (HIT['bid']/COSS['ask']-1)*100
             print(TIME + '    COSSIO Buy | HitBTC Sell ' + str(rate) + '%')
         if HIT['bid'] > STR['ask']:
-            rate = (HIT['bid']/STR['asks']-1)*100
+            rate = (HIT['bid']/STR['ask']-1)*100
             print(TIME + '    Stellar Buy | HitBTC Sell ' + str(rate) + '%')
         if COSS['bid'] > HIT['ask']:
             rate = (COSS['bid']/HIT['ask']-1)*100
@@ -42,5 +45,6 @@ while True:
             rate = (STR['bid']/COSS['ask']-1)*100
             print(TIME + '    COSSIO Buy | Stellar Sell ' + str(rate) + '%')
         time.sleep(REFRESH_DELAY)
-    except:
-        time.sleep(1)
+    except IOError as e:
+        print(e)
+        time.sleep(15)

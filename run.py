@@ -80,7 +80,7 @@ while True:
             print(TIME + '    ' + msg)
             TGSend(msg)
         if is_true:
-            TGSend('--------------------')
+            TGSend('-----------------------------------------')
             LAST_MSG = int(time.time())
             is_true = False
 

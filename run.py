@@ -26,11 +26,13 @@ PARAM['chat_id'] = TG_CHAT_ID
 
 is_true = False
 
-def TGSend(message):
+def TGSend(message, rate):
     global is_true
     if TG_BOT_ENABLE == False:
         return
     if (LAST_MSG + MIN_DELAY) >= int(time.time()):
+        return
+    if rate < MIN_DIFF:
         return
     
     is_true = True
@@ -53,34 +55,34 @@ while True:
             rate = (HIT['bid']/COSS['ask']-1)*100
             msg = 'KIN COSSIO Buy | HitBTC Sell ' + str(rate) + '%'
             print(TIME + '    ' + msg)
-            TGSend(msg)
+            TGSend(msg, rate)
         if HIT['bid'] > STR['ask']:
             rate = (HIT['bid']/STR['ask']-1)*100
             msg = 'KIN Stellar Buy | HitBTC Sell ' + str(rate) + '%'
             print(TIME + '    ' + msg)
-            TGSend(msg)
+            TGSend(msg, rate)
         if COSS['bid'] > HIT['ask']:
             rate = (COSS['bid']/HIT['ask']-1)*100
             msg = 'KIN HitBTC Buy | COSSIO Sell ' + str(rate) + '%'
             print(TIME + '    ' + msg)
-            TGSend(msg)
+            TGSend(msg, rate)
         if COSS['bid'] > STR['ask']:
             rate = (COSS['bid']/STR['ask']-1)*100
             msg = 'KIN Stellar Buy | COSSIO Sell ' + str(rate) + '%'
             print(TIME + '    ' + msg)
-            TGSend(msg)
+            TGSend(msg, rate)
         if STR['bid'] > HIT['ask']:
             rate = (STR['bid']/HIT['ask']-1)*100
             msg = 'KIN HitBTC Buy | Stellar Sell ' + str(rate) + '%'
             print(TIME + '    ' + msg)
-            TGSend(msg)
+            TGSend(msg, rate)
         if STR['bid'] > COSS['ask']:
             rate = (STR['bid']/COSS['ask']-1)*100
             msg = 'KIN COSSIO Buy | Stellar Sell ' + str(rate) + '%'
             print(TIME + '    ' + msg)
-            TGSend(msg)
+            TGSend(msg, rate)
         if is_true:
-            TGSend('-----------------------------------------')
+            TGSend('-----------------------------------------',MIN_DIFF+1)
             LAST_MSG = int(time.time())
             is_true = False
 
